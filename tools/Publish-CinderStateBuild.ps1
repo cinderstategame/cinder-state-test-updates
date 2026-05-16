@@ -33,6 +33,23 @@ function Invoke-Checked {
     }
 }
 
+function Test-GitHubReleaseExists {
+    param(
+        [string]$Tag,
+        [string]$Repository
+    )
+
+    $previousErrorActionPreference = $ErrorActionPreference
+    try {
+        $ErrorActionPreference = "SilentlyContinue"
+        & gh release view $Tag --repo $Repository *> $null
+        return $LASTEXITCODE -eq 0
+    }
+    finally {
+        $ErrorActionPreference = $previousErrorActionPreference
+    }
+}
+
 function Normalize-Version {
     param([string]$Value)
 
@@ -108,11 +125,7 @@ try {
     }
 
     Write-Host "Preparing release $tag..."
-    $releaseExists = $true
-    & gh release view $tag --repo $Repo *> $null
-    if ($LASTEXITCODE -ne 0) {
-        $releaseExists = $false
-    }
+    $releaseExists = Test-GitHubReleaseExists -Tag $tag -Repository $Repo
 
     if ($releaseExists) {
         if (!$ReplaceExistingReleaseAsset) {
