@@ -1,9 +1,9 @@
 {
   "version": "0.1.0",
-  "packageUrl": "https://YOUR_HOST_HERE/Cinder_State_Friend_Client_Win64.zip",
-  "sha256": "PUT_SHA256_HASH_HERE",
+  "packageUrl": "https://github.com/cinderstategame/cinder-state-test-updates/releases/download/v0.1.0/Cinder_State_Friend_Client_Win64.zip",
+  "sha256": "2877259E2082F7DA8CF992E7B459319710882B5E5266C5675C8E427CE9D05434",
   "installFolderName": "Cinder State Test",
   "launchExe": "Cinder_State.exe",
   "serverAddress": "YOUR_SERVER_IP:PORT",
-  "notes": "Replace packageUrl, sha256, and serverAddress after uploading the current remote tester package."
+  "notes": "Replace serverAddress with the active public server endpoint before sharing the launcher with testers."
 }
