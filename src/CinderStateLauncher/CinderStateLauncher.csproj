@@ -7,5 +7,6 @@
     <Nullable>enable</Nullable>
     <AssemblyName>CinderStateLauncher</AssemblyName>
     <RootNamespace>CinderStateLauncher</RootNamespace>
+    <ApplicationIcon>..\..\assets\Cinder_State_Launcher_Icon.ico</ApplicationIcon>
   </PropertyGroup>
 </Project>

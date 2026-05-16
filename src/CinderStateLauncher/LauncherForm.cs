@@ -17,6 +17,7 @@ internal sealed class LauncherForm : Form
     {
         _launcherService = launcherService;
         BuildUi();
+        ApplyWindowIcon();
         Shown += async (_, _) => await RefreshStateAsync();
         FormClosing += (_, _) => _operationCts?.Cancel();
     }
@@ -83,6 +84,15 @@ internal sealed class LauncherForm : Form
             _primaryButton,
             _refreshButton
         });
+    }
+
+    private void ApplyWindowIcon()
+    {
+        Icon? appIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+        if (appIcon is not null)
+        {
+            Icon = appIcon;
+        }
     }
 
     private async Task RefreshStateAsync()

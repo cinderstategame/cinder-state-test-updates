@@ -22,6 +22,7 @@ internal sealed class InstallerForm : Form
     public InstallerForm()
     {
         BuildUi();
+        ApplyWindowIcon();
     }
 
     private void BuildUi()
@@ -78,6 +79,15 @@ internal sealed class InstallerForm : Form
             _launchButton,
             _closeButton
         });
+    }
+
+    private void ApplyWindowIcon()
+    {
+        Icon? appIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+        if (appIcon is not null)
+        {
+            Icon = appIcon;
+        }
     }
 
     private void InstallLauncher()
@@ -152,13 +162,14 @@ internal sealed class InstallerForm : Form
         shortcut.TargetPath = LauncherPath;
         shortcut.WorkingDirectory = InstallPath;
         shortcut.Description = "Cinder State Test Launcher";
+        shortcut.IconLocation = LauncherPath;
         shortcut.Save();
     }
 
     private void CreateUrlShortcut()
     {
         string urlShortcutPath = Path.Combine(DesktopPath, "Cinder State Launcher.url");
-        File.WriteAllText(urlShortcutPath, $"[InternetShortcut]{Environment.NewLine}URL=file:///{LauncherPath.Replace('\\', '/')}{Environment.NewLine}");
+        File.WriteAllText(urlShortcutPath, $"[InternetShortcut]{Environment.NewLine}URL=file:///{LauncherPath.Replace('\\', '/')}{Environment.NewLine}IconFile={LauncherPath}{Environment.NewLine}IconIndex=0{Environment.NewLine}");
     }
 
     private void LaunchInstalledLauncher()
