@@ -1,0 +1,9 @@
+{
+  "version": "0.1.0",
+  "packageUrl": "https://YOUR_HOST_HERE/Cinder_State_Friend_Client_Win64.zip",
+  "sha256": "PUT_SHA256_HASH_HERE",
+  "installFolderName": "Cinder State Test",
+  "launchExe": "Cinder_State.exe",
+  "serverAddress": "YOUR_SERVER_IP:PORT",
+  "notes": "Replace packageUrl, sha256, and serverAddress after uploading the current remote tester package."
+}
