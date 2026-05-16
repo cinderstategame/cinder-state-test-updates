@@ -26,37 +26,40 @@ Current known package output:
 C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip
 ```
 
-2. Pick the next version tag.
+2. Run the automated publisher with the next version.
 
 Example:
 
-```text
-v0.1.1
+```powershell
+cd "C:\Users\jinxu\Desktop\Cinder State Test Launcher"
+.\tools\Publish-CinderStateBuild.ps1 -Version 0.1.1
 ```
 
-3. Upload the ZIP as a GitHub Release asset.
+This script:
 
-Preferred PowerShell command:
+- uploads the ZIP as a GitHub Release asset,
+- calculates SHA256,
+- updates root `version.json`,
+- commits `version.json`,
+- pushes the update to GitHub.
+
+Once `version.json` is pushed, testers only need to open the launcher and click update/play.
+
+Use a custom note when useful:
 
 ```powershell
-gh release create v0.1.1 `
-  "C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip" `
-  --repo cinderstategame/cinder-state-test-updates `
-  --title "Cinder State Test v0.1.1" `
-  --notes "Private tester build v0.1.1."
+.\tools\Publish-CinderStateBuild.ps1 -Version 0.1.1 -Notes "Private tester build with updated map travel checks."
 ```
 
-If you use the GitHub website, upload the ZIP in the Release asset area, not inside the description text box.
-
-4. Get the SHA256 hash.
+If you intentionally need to replace an existing release asset for the same version:
 
 ```powershell
-Get-FileHash "C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip" -Algorithm SHA256
+.\tools\Publish-CinderStateBuild.ps1 -Version 0.1.1 -ReplaceExistingReleaseAsset
 ```
 
-5. Update root `version.json`.
+## Manual Fallback
 
-Example:
+The automated publisher writes `version.json` in this shape:
 
 ```json
 {
@@ -68,16 +71,6 @@ Example:
   "notes": "Private tester build v0.1.1."
 }
 ```
-
-6. Commit and push `version.json`.
-
-```powershell
-git add version.json
-git commit -m "Publish Cinder State test build v0.1.1"
-git push
-```
-
-Once `version.json` is pushed, testers only need to open the launcher and click update/play.
 
 ## Publish A New Launcher Installer
 

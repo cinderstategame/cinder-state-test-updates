@@ -1,12 +1,42 @@
+# .NET build output
 bin/
 obj/
 publish/
 dist/
 artifacts/
+
+# Local helper scripts that can contain machine-specific signing paths/options
+scripts/
+
+# Large packaged build archives
 *.zip
 *.7z
 *.rar
+
+# Logs and temp files
 *.log
 *.tmp
+*.temp
+*.bak
+
+# User/editor state
 *.user
+*.suo
 .vs/
+.vscode/
+
+# Signing certificates and local secret material
+*.pfx
+*.p12
+*.cer
+*.crt
+*.key
+*.pem
+*.snk
+*.password
+*.secrets.json
+*.metadata.json
+
+# OS noise
+Thumbs.db
+Desktop.ini
