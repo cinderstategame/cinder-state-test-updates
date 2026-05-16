@@ -78,3 +78,37 @@ git push
 ```
 
 Once `version.json` is pushed, testers only need to open the launcher and click update/play.
+
+## Publish A New Launcher Installer
+
+You only need this when the launcher itself changes. Normal game updates only require a new client ZIP and `version.json` update.
+
+1. Publish the launcher payload:
+
+```powershell
+dotnet publish .\src\CinderStateLauncher\CinderStateLauncher.csproj `
+  -c Release `
+  -r win-x64 `
+  --self-contained true `
+  -p:PublishSingleFile=true `
+  -p:IncludeNativeLibrariesForSelfExtract=true `
+  -o .\publish\win-x64
+```
+
+2. Publish the installer EXE:
+
+```powershell
+dotnet publish .\src\CinderStateLauncherInstaller\CinderStateLauncherInstaller.csproj `
+  -c Release `
+  -r win-x64 `
+  --self-contained true `
+  -p:PublishSingleFile=true `
+  -p:IncludeNativeLibrariesForSelfExtract=true `
+  -o .\dist\installer
+```
+
+3. Upload this file as a GitHub Release asset:
+
+```text
+dist\installer\CinderStateLauncherInstaller.exe
+```

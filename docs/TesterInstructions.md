@@ -1,23 +1,25 @@
 # Tester Instructions
 
-Testers do not need Unreal Engine, Git, or .NET when you send them a self-contained published launcher package.
+Testers do not need Unreal Engine, Git, .NET, PowerShell commands, or batch files.
 
 ## First Install
 
-1. Extract the launcher package you send them.
-2. Run:
+1. Download the installer EXE you send them.
+2. Double-click:
 
 ```text
-Install-CinderStateLauncher.bat
+CinderStateLauncherInstaller.exe
 ```
 
-3. Open the Desktop shortcut:
+3. If Windows SmartScreen warns because the installer is unsigned, choose `More info` and `Run anyway`.
+4. Click `Install`.
+5. Open the Desktop shortcut:
 
 ```text
 Cinder State Launcher
 ```
 
-4. Click `Install and Play`.
+6. Click `Install and Play`.
 
 ## Normal Use
 

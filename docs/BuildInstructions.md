@@ -14,7 +14,7 @@ Build a normal debug/dev copy:
 dotnet build .\src\CinderStateLauncher\CinderStateLauncher.csproj
 ```
 
-Publish a tester-ready launcher that does not require testers to install .NET:
+Publish a tester-ready launcher payload that does not require testers to install .NET:
 
 ```powershell
 dotnet publish .\src\CinderStateLauncher\CinderStateLauncher.csproj `
@@ -26,7 +26,25 @@ dotnet publish .\src\CinderStateLauncher\CinderStateLauncher.csproj `
   -o .\publish\win-x64
 ```
 
-Install the published launcher to your own Desktop for a local test:
+Build the official double-click installer EXE:
+
+```powershell
+dotnet publish .\src\CinderStateLauncherInstaller\CinderStateLauncherInstaller.csproj `
+  -c Release `
+  -r win-x64 `
+  --self-contained true `
+  -p:PublishSingleFile=true `
+  -p:IncludeNativeLibrariesForSelfExtract=true `
+  -o .\dist\installer
+```
+
+The installer EXE will be:
+
+```text
+dist\installer\CinderStateLauncherInstaller.exe
+```
+
+The older script installer is kept only as a development fallback:
 
 ```powershell
 .\installer\Install-CinderStateLauncher.bat
