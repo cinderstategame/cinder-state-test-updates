@@ -28,6 +28,14 @@ C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\
 
 2. Run the automated publisher with the next version.
 
+Easiest option: double-click this root-level file and enter the version when prompted:
+
+```text
+PublishNewCinderStateBuild.bat
+```
+
+Command-line option:
+
 Example:
 
 ```powershell
