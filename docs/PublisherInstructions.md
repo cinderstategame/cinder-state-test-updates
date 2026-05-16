@@ -26,21 +26,35 @@ Current known package output:
 C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip
 ```
 
-2. Run the automated publisher with the next version.
+2. Run the automated publisher.
 
-Easiest option: double-click this root-level file and enter the version when prompted:
+Easiest option: double-click this root-level file:
 
 ```text
 PublishNewCinderStateBuild.bat
 ```
 
-Command-line option:
+The publisher starts from `publisher-version.txt` and automatically bumps the last number by one. The first automatic publish is:
+
+```text
+0.0.0.1
+```
+
+Then:
+
+```text
+0.0.0.2
+0.0.0.3
+0.0.0.4
+```
+
+Command-line auto-publish option:
 
 Example:
 
 ```powershell
 cd "C:\Users\jinxu\Desktop\Cinder State Test Launcher"
-.\tools\Publish-CinderStateBuild.ps1 -Version 0.1.1
+.\tools\Publish-CinderStateBuild.ps1 -AutoIncrement
 ```
 
 This script:
@@ -56,7 +70,7 @@ Once `version.json` is pushed, testers only need to open the launcher and click 
 Use a custom note when useful:
 
 ```powershell
-.\tools\Publish-CinderStateBuild.ps1 -Version 0.1.1 -Notes "Private tester build with updated map travel checks."
+.\tools\Publish-CinderStateBuild.ps1 -AutoIncrement -Notes "Private tester build with updated map travel checks."
 ```
 
 If you intentionally need to replace an existing release asset for the same version:

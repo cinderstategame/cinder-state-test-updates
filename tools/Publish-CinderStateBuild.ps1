@@ -1,5 +1,4 @@
 param(
-    [Parameter(Mandatory = $true)]
     [string]$Version,
 
     [string]$ZipPath = "C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip",
@@ -7,6 +6,7 @@ param(
     [string]$ExePath = "Windows/Cinder_State.exe",
     [string]$LaunchArgs = "24.61.204.60:7777 -log",
     [string]$Notes,
+    [switch]$AutoIncrement,
     [switch]$ReplaceExistingReleaseAsset,
     [switch]$NoCommit
 )
@@ -33,14 +33,51 @@ function Invoke-Checked {
     }
 }
 
-$repoRoot = Split-Path -Parent $PSScriptRoot
-$versionNumber = $Version.Trim()
-if ($versionNumber.StartsWith("v", [StringComparison]::OrdinalIgnoreCase)) {
-    $versionNumber = $versionNumber.Substring(1)
+function Normalize-Version {
+    param([string]$Value)
+
+    $normalized = $Value.Trim()
+    if ($normalized.StartsWith("v", [StringComparison]::OrdinalIgnoreCase)) {
+        $normalized = $normalized.Substring(1)
+    }
+
+    if ($normalized -notmatch '^\d+(\.\d+){1,3}$') {
+        throw "Version must look like 0.0.0.1 or v0.0.0.1."
+    }
+
+    $parts = @($normalized.Split('.') | ForEach-Object { [int]$_ })
+    while ($parts.Count -lt 4) {
+        $parts += 0
+    }
+
+    return ($parts[0..3] -join ".")
 }
 
-if ($versionNumber -notmatch '^\d+(\.\d+){1,3}$') {
-    throw "Version must look like 0.1.1 or v0.1.1."
+function Get-Next-Version {
+    param([string]$CurrentVersion)
+
+    $normalized = Normalize-Version $CurrentVersion
+    $parts = @($normalized.Split('.') | ForEach-Object { [int]$_ })
+    $parts[3]++
+    return ($parts -join ".")
+}
+
+$repoRoot = Split-Path -Parent $PSScriptRoot
+$publisherStatePath = Join-Path $repoRoot "publisher-version.txt"
+
+if ($AutoIncrement) {
+    if (!(Test-Path $publisherStatePath)) {
+        "0.0.0.0" | Set-Content -Path $publisherStatePath -Encoding ascii
+    }
+
+    $currentPublisherVersion = Get-Content -Raw $publisherStatePath
+    $versionNumber = Get-Next-Version $currentPublisherVersion
+}
+elseif (![string]::IsNullOrWhiteSpace($Version)) {
+    $versionNumber = Normalize-Version $Version
+}
+else {
+    throw "Provide -Version 0.0.0.1 or use -AutoIncrement."
 }
 
 $tag = "v$versionNumber"
@@ -113,9 +150,18 @@ try {
         ConvertTo-Json -Depth 4 |
         Set-Content -Path $versionJsonPath -Encoding utf8
 
+    if ($AutoIncrement) {
+        $versionNumber | Set-Content -Path $publisherStatePath -Encoding ascii
+    }
+
     if (!$NoCommit) {
         Write-Host "Committing and pushing version.json..."
-        Invoke-Checked "git" @("add", "version.json")
+        if ($AutoIncrement) {
+            Invoke-Checked "git" @("add", "version.json", "publisher-version.txt")
+        }
+        else {
+            Invoke-Checked "git" @("add", "version.json")
+        }
         Invoke-Checked "git" @("commit", "-m", "Publish Cinder State test build $tag")
         Invoke-Checked "git" @("push")
     }
