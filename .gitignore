@@ -1,0 +1,11 @@
+bin/
+obj/
+publish/
+dist/
+*.zip
+*.7z
+*.rar
+*.log
+*.tmp
+*.user
+.vs/
