@@ -1,8 +1,8 @@
 ﻿{
-    "version":  "0.0.0.4",
-    "downloadUrl":  "https://github.com/cinderstategame/cinder-state-test-updates/releases/download/v0.0.0.4/Cinder_State_Friend_Client_Win64.zip",
+    "version":  "0.0.0.5",
+    "downloadUrl":  "https://github.com/cinderstategame/cinder-state-test-updates/releases/download/v0.0.0.5/Cinder_State_Friend_Client_Win64.zip",
     "exePath":  "Windows/Cinder_State.exe",
-    "sha256":  "CF4768D8C60E183AA81D76A41C17D605E041878D651D828F71495657E1E4DDE8",
+    "sha256":  "7585964D3211C753AA8E8AC6E9C9783FABCF5B4C029EB4AB0EBC1C0D2087AEDF",
     "launchArgs":  "24.61.204.60:7777 -log",
-    "notes":  "Private tester build 0.0.0.4."
+    "notes":  "Private tester build 0.0.0.5."
 }
