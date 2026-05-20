@@ -4,7 +4,7 @@ param(
     [string]$ZipPath = "C:\Users\jinxu\Documents\Unreal Projects\Cinder_State\Saved\FriendClientPackage\Cinder_State_Friend_Client_Win64.zip",
     [string]$Repo = "cinderstategame/cinder-state-test-updates",
     [string]$ExePath = "Windows/Cinder_State.exe",
-    [string]$LaunchArgs = "24.61.204.60:7777 -log",
+    [string]$LaunchArgs = "play.cinderstategame.com:7777 -log",
     [string]$Notes,
     [switch]$AutoIncrement,
     [switch]$ReplaceExistingReleaseAsset,

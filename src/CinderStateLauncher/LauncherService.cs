@@ -111,10 +111,14 @@ internal sealed class LauncherService
             throw new FileNotFoundException("The installed Cinder State executable was not found.", exePath);
         }
 
+        string launchArgs = !string.IsNullOrWhiteSpace(state.Remote?.LaunchArgs)
+            ? state.Remote.LaunchArgs
+            : local.LaunchArgs ?? "";
+
         var startInfo = new ProcessStartInfo
         {
             FileName = exePath,
-            Arguments = local.LaunchArgs ?? "",
+            Arguments = launchArgs,
             WorkingDirectory = Path.GetDirectoryName(exePath) ?? InstallRoot,
             UseShellExecute = true
         };

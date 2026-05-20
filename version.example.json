@@ -3,6 +3,6 @@
   "downloadUrl": "https://example.com/CinderState_Client_0.0.20.zip",
   "exePath": "Windows/Cinder_State.exe",
   "sha256": "OPTIONAL_SHA256_HASH_HERE",
-  "launchArgs": "YOUR_SERVER_IP:7777 -log",
+  "launchArgs": "play.cinderstategame.com:7777 -log",
   "notes": "Day 20 private test build."
 }

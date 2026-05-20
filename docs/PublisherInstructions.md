@@ -89,7 +89,7 @@ The automated publisher writes `version.json` in this shape:
   "downloadUrl": "https://github.com/cinderstategame/cinder-state-test-updates/releases/download/v0.1.1/Cinder_State_Friend_Client_Win64.zip",
   "exePath": "Windows/Cinder_State.exe",
   "sha256": "PUT_NEW_SHA256_HASH_HERE",
-  "launchArgs": "24.61.204.60:7777 -log",
+  "launchArgs": "play.cinderstategame.com:7777 -log",
   "notes": "Private tester build v0.1.1."
 }
 ```
