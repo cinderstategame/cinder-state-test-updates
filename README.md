@@ -8,7 +8,7 @@ The launcher:
 - Compares it against the local installed version.
 - Downloads the packaged client ZIP when an update is available.
 - Verifies the ZIP with SHA256 when provided.
-- Extracts into the tester's Desktop install folder.
+- Extracts into the tester's `%LOCALAPPDATA%\Cinder State Test` install folder.
 - Launches `Cinder_State.exe` with the configured server args.
 
 ## Project Layout
@@ -29,4 +29,4 @@ The launcher currently reads:
 https://raw.githubusercontent.com/cinderstategame/cinder-state-test-updates/main/version.json
 ```
 
-That file points to the current GitHub Release ZIP.
+That file points to the current hosted tester ZIP.

@@ -13,7 +13,7 @@ CinderStateLauncherInstaller.exe
 
 3. If Windows SmartScreen warns because the installer is unsigned, choose `More info` and `Run anyway`.
 4. Click `Install`.
-5. Open the Desktop shortcut:
+5. Open the Desktop or Start Menu shortcut:
 
 ```text
 Cinder State Launcher
@@ -32,10 +32,35 @@ Desktop\Cinder State Launcher.lnk
 The launcher installs and updates the game files in:
 
 ```text
-Desktop\Cinder State Test
+%LOCALAPPDATA%\Cinder State Test
 ```
 
 Do not ask testers to manually edit files in that folder. If a build is broken, publish a fixed build and update `version.json`.
+
+The launcher itself installs to:
+
+```text
+%LOCALAPPDATA%\Cinder State Launcher
+```
+
+The installer also creates a Start Menu folder:
+
+```text
+Start Menu\Programs\Cinder State
+```
+
+To uninstall, use the Start Menu uninstall shortcut or run:
+
+```text
+%LOCALAPPDATA%\Cinder State Launcher\Uninstall Cinder State Launcher.bat
+```
+
+If upgrading from an older Desktop-based install, testers can delete these old folders after the new launcher works:
+
+```text
+Desktop\Cinder State Launcher
+Desktop\Cinder State Test
+```
 
 ## Failure Behavior
 

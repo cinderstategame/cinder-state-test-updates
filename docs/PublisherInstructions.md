@@ -98,6 +98,22 @@ The automated publisher writes `version.json` in this shape:
 
 You only need this when the launcher itself changes. Normal game updates only require a new client ZIP and `version.json` update.
 
+Easiest option: double-click this root-level file:
+
+```text
+PublishLauncherInstaller.bat
+```
+
+That rebuilds the launcher payload, rebuilds the installer EXE, uploads/replaces the installer in R2, and prints the download URL plus SHA256.
+
+Current R2 installer URL:
+
+```text
+https://pub-f2c866d0b48d44e2a73269c91af359b0.r2.dev/CinderStateLauncherInstaller.exe
+```
+
+Manual local build steps:
+
 1. Publish the launcher payload:
 
 ```powershell
@@ -122,7 +138,7 @@ dotnet publish .\src\CinderStateLauncherInstaller\CinderStateLauncherInstaller.c
   -o .\dist\installer
 ```
 
-3. Upload this file as a GitHub Release asset:
+3. Upload/replace this file in the R2 bucket if you are not using the BAT:
 
 ```text
 dist\installer\CinderStateLauncherInstaller.exe

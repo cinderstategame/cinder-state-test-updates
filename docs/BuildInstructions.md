@@ -53,17 +53,20 @@ The older script installer is kept only as a development fallback:
 The installer copies the published launcher to:
 
 ```text
-Desktop\Cinder State Launcher
+%LOCALAPPDATA%\Cinder State Launcher
 ```
 
-It also creates this shortcut:
+It also creates these shortcuts:
 
 ```text
 Desktop\Cinder State Launcher.lnk
+Start Menu\Programs\Cinder State\Cinder State Launcher.lnk
+Start Menu\Programs\Cinder State\Uninstall Cinder State Launcher.lnk
+%LOCALAPPDATA%\Cinder State Launcher\Uninstall Cinder State Launcher.bat
 ```
 
 The launcher installs/updates the actual game client separately under:
 
 ```text
-Desktop\Cinder State Test
+%LOCALAPPDATA%\Cinder State Test
 ```

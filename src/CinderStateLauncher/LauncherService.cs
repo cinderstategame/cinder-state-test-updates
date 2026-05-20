@@ -16,7 +16,7 @@ internal sealed class LauncherService
     private readonly HttpClient _httpClient = new() { Timeout = TimeSpan.FromMinutes(30) };
 
     public string InstallRoot { get; } = Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
         InstallFolderName);
 
     private string MetadataRoot => Path.Combine(InstallRoot, MetadataFolderName);

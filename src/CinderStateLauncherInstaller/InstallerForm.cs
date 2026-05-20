@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using System.Text;
 
 namespace CinderStateLauncherInstaller;
 
@@ -7,17 +8,27 @@ internal sealed class InstallerForm : Form
 {
     private const string LauncherExeName = "CinderStateLauncher.exe";
     private const string InstallFolderName = "Cinder State Launcher";
+    private const string GameInstallFolderName = "Cinder State Test";
+    private const string StartMenuFolderName = "Cinder State";
     private const string ShortcutName = "Cinder State Launcher.lnk";
+    private const string UninstallScriptName = "Uninstall Cinder State Launcher.bat";
+    private const string UninstallShortcutName = "Uninstall Cinder State Launcher.lnk";
 
     private readonly Label _statusLabel = new();
     private readonly Button _installButton = new();
     private readonly Button _launchButton = new();
     private readonly Button _closeButton = new();
 
+    private string LocalAppDataPath => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
     private string DesktopPath => Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-    private string InstallPath => Path.Combine(DesktopPath, InstallFolderName);
+    private string ProgramsPath => Environment.GetFolderPath(Environment.SpecialFolder.Programs);
+    private string InstallPath => Path.Combine(LocalAppDataPath, InstallFolderName);
     private string LauncherPath => Path.Combine(InstallPath, LauncherExeName);
-    private string ShortcutPath => Path.Combine(DesktopPath, ShortcutName);
+    private string UninstallScriptPath => Path.Combine(InstallPath, UninstallScriptName);
+    private string DesktopShortcutPath => Path.Combine(DesktopPath, ShortcutName);
+    private string StartMenuFolderPath => Path.Combine(ProgramsPath, StartMenuFolderName);
+    private string StartMenuShortcutPath => Path.Combine(StartMenuFolderPath, ShortcutName);
+    private string StartMenuUninstallShortcutPath => Path.Combine(StartMenuFolderPath, UninstallShortcutName);
 
     public InstallerForm()
     {
@@ -45,28 +56,35 @@ internal sealed class InstallerForm : Form
 
         var installPathLabel = new Label
         {
-            Text = $"Install location: Desktop\\{InstallFolderName}",
+            Text = $"Launcher: %LOCALAPPDATA%\\{InstallFolderName}",
             Location = new Point(22, 64),
             Size = new Size(410, 24)
         };
 
+        var gamePathLabel = new Label
+        {
+            Text = $"Game files: %LOCALAPPDATA%\\{GameInstallFolderName}",
+            Location = new Point(22, 88),
+            Size = new Size(410, 24)
+        };
+
         _statusLabel.Text = "Ready to install.";
-        _statusLabel.Location = new Point(22, 98);
+        _statusLabel.Location = new Point(22, 120);
         _statusLabel.Size = new Size(410, 40);
 
         _installButton.Text = "Install";
-        _installButton.Location = new Point(160, 158);
+        _installButton.Location = new Point(160, 166);
         _installButton.Size = new Size(88, 30);
         _installButton.Click += (_, _) => InstallLauncher();
 
         _launchButton.Text = "Launch";
-        _launchButton.Location = new Point(254, 158);
+        _launchButton.Location = new Point(254, 166);
         _launchButton.Size = new Size(88, 30);
         _launchButton.Enabled = File.Exists(LauncherPath);
         _launchButton.Click += (_, _) => LaunchInstalledLauncher();
 
         _closeButton.Text = "Close";
-        _closeButton.Location = new Point(348, 158);
+        _closeButton.Location = new Point(348, 166);
         _closeButton.Size = new Size(88, 30);
         _closeButton.Click += (_, _) => Close();
 
@@ -74,6 +92,7 @@ internal sealed class InstallerForm : Form
         {
             titleLabel,
             installPathLabel,
+            gamePathLabel,
             _statusLabel,
             _installButton,
             _launchButton,
@@ -98,9 +117,10 @@ internal sealed class InstallerForm : Form
         {
             Directory.CreateDirectory(InstallPath);
             ExtractLauncher();
-            CreateDesktopShortcut();
+            WriteUninstallScript();
+            CreateShortcuts();
 
-            _statusLabel.Text = $"Installed. Use the Desktop shortcut: {Path.GetFileNameWithoutExtension(ShortcutName)}";
+            _statusLabel.Text = "Installed. Use the Desktop or Start Menu shortcut.";
             _launchButton.Enabled = true;
         }
         catch (Exception ex)
@@ -148,28 +168,67 @@ internal sealed class InstallerForm : Form
         File.Move(tempPath, LauncherPath);
     }
 
-    private void CreateDesktopShortcut()
+    private void WriteUninstallScript()
+    {
+        string[] lines =
+        {
+            "@echo off",
+            "setlocal EnableExtensions",
+            "",
+            "set \"INSTALL_DIR=%LOCALAPPDATA%\\Cinder State Launcher\"",
+            "set \"GAME_DIR=%LOCALAPPDATA%\\Cinder State Test\"",
+            "set \"DESKTOP_SHORTCUT=%USERPROFILE%\\Desktop\\Cinder State Launcher.lnk\"",
+            "set \"DESKTOP_URL=%USERPROFILE%\\Desktop\\Cinder State Launcher.url\"",
+            "set \"START_MENU_DIR=%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Cinder State\"",
+            "",
+            "echo This will remove Cinder State Launcher and downloaded Cinder State Test files.",
+            "choice /C YN /M \"Continue\"",
+            "if errorlevel 2 exit /b 0",
+            "",
+            "taskkill /IM CinderStateLauncher.exe /F >nul 2>nul",
+            "del /F /Q \"%DESKTOP_SHORTCUT%\" >nul 2>nul",
+            "del /F /Q \"%DESKTOP_URL%\" >nul 2>nul",
+            "rmdir /S /Q \"%START_MENU_DIR%\" >nul 2>nul",
+            "rmdir /S /Q \"%GAME_DIR%\" >nul 2>nul",
+            "cd /d \"%TEMP%\"",
+            "start \"\" /min cmd /c \"timeout /t 2 /nobreak >nul & rmdir /s /q \"\"%INSTALL_DIR%\"\"\"",
+            "echo Uninstall scheduled.",
+            "exit /b 0"
+        };
+
+        File.WriteAllLines(UninstallScriptPath, lines, Encoding.ASCII);
+    }
+
+    private void CreateShortcuts()
+    {
+        Directory.CreateDirectory(StartMenuFolderPath);
+        CreateShortcut(DesktopShortcutPath, LauncherPath, InstallPath, "Cinder State Test Launcher");
+        CreateShortcut(StartMenuShortcutPath, LauncherPath, InstallPath, "Cinder State Test Launcher");
+        CreateShortcut(StartMenuUninstallShortcutPath, UninstallScriptPath, InstallPath, "Uninstall Cinder State Launcher");
+    }
+
+    private void CreateShortcut(string shortcutPath, string targetPath, string workingDirectory, string description)
     {
         Type? shellType = Type.GetTypeFromProgID("WScript.Shell");
         if (shellType is null)
         {
-            CreateUrlShortcut();
+            CreateUrlShortcut(shortcutPath, targetPath);
             return;
         }
 
         dynamic shell = Activator.CreateInstance(shellType)!;
-        dynamic shortcut = shell.CreateShortcut(ShortcutPath);
-        shortcut.TargetPath = LauncherPath;
-        shortcut.WorkingDirectory = InstallPath;
-        shortcut.Description = "Cinder State Test Launcher";
-        shortcut.IconLocation = LauncherPath;
+        dynamic shortcut = shell.CreateShortcut(shortcutPath);
+        shortcut.TargetPath = targetPath;
+        shortcut.WorkingDirectory = workingDirectory;
+        shortcut.Description = description;
+        shortcut.IconLocation = targetPath;
         shortcut.Save();
     }
 
-    private void CreateUrlShortcut()
+    private void CreateUrlShortcut(string shortcutPath, string targetPath)
     {
-        string urlShortcutPath = Path.Combine(DesktopPath, "Cinder State Launcher.url");
-        File.WriteAllText(urlShortcutPath, $"[InternetShortcut]{Environment.NewLine}URL=file:///{LauncherPath.Replace('\\', '/')}{Environment.NewLine}IconFile={LauncherPath}{Environment.NewLine}IconIndex=0{Environment.NewLine}");
+        string urlShortcutPath = Path.ChangeExtension(shortcutPath, ".url");
+        File.WriteAllText(urlShortcutPath, $"[InternetShortcut]{Environment.NewLine}URL=file:///{targetPath.Replace('\\', '/')}{Environment.NewLine}IconFile={targetPath}{Environment.NewLine}IconIndex=0{Environment.NewLine}");
     }
 
     private void LaunchInstalledLauncher()
